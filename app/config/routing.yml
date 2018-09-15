@@ -1,3 +1,11 @@
 app:
     resource: '@AppBundle/Controller/'
     type: annotation
+
+email_sender_send_email:
+    path:     /send_email
+    defaults: { _controller: "AppBundle:EmailSender:SendEmail" }
+
+email_success:
+    path:     /email_success
+    defaults: { _controller: "AppBundle:EmailSender:EmailSentNotice" }
