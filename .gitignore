@@ -7,9 +7,12 @@
 # Email spool folder
 /app/spool/*
 
-# Cache, session files and logs (Symfony3)
+# Cache, session files and logs (Symfony3
+!/var/cache
 /var/cache/*
 /var/logs/*
+!/var/logs
+!/var/sessions
 /var/sessions/*
 !var/cache/.gitkeep
 !var/logs/.gitkeep
@@ -26,6 +29,7 @@
 !bin/console
 !bin/symfony_requirements
 /vendor/
+!var/SymfonyRequirements.php
 
 # Assets and user uploads
 /web/bundles/
@@ -46,3 +50,7 @@
 
 # Embedded web-server pid file
 /.web-server-pid
+
+#PhpStorm
+/.idea
+
