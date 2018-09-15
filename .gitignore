@@ -54,3 +54,7 @@
 #PhpStorm
 /.idea
 
+#WebPack
+/assets/
+/node_modules/
+
