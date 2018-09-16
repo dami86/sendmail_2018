@@ -4,12 +4,12 @@
 <div class="container">
     <div class="row">
         <div class="col-md-4 mb-3">
-            {{ form_start(form) }}
+            {{ form_start(form, {'attr': {'id': 'form_email_send'}}) }}
             {{ form_widget(form) }}
             {{ form_end(form) }}
         </div>
     </div>
-    <button class="ajax">click me!</button>
+    <div id="my-result"></div>
 </div>
 
 {% endblock %}

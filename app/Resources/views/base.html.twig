@@ -9,6 +9,24 @@
         <link rel="stylesheet" href="{{ asset('build/global.css') }}">
     </head>
     <body>
+        <div id="alerts" class="p-3">
+            <div id="message_placeholder"></div>
+            {% for label, flashes in app.session.flashbag.all %}
+                {% for flash in flashes %}
+                    {% if label == 'notice' %}
+                        {%  set labelVal = 'success' %}
+                        {% set prefix = 'Success!' %}
+                    {% elseif label == 'error' %}
+                        {%  set labelVal = 'danger' %}
+                        {% set prefix = 'Error!' %}
+                    {% endif %}
+                    <div class="alert alert-{{ labelVal }}">
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        <strong>{{ prefix }}</strong> {{ flash }}
+                    </div>
+                {% endfor %}
+            {% endfor %}
+        </div>
         {% block body %}{% endblock %}
         {% block javascripts %}{% endblock %}
         <script src="{{ asset('build/app.js') }}"></script>

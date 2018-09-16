@@ -11,7 +11,6 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Email;
 use AppBundle\Form\EmailFormType;
-use AppBundle\Service\EmailSender;
 use Swift_Message;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -20,13 +19,24 @@ use Symfony\Component\HttpFoundation\Response;
 
 class EmailSenderController extends Controller
 {
-    public function SendEmailAction(\Swift_Mailer $mailer, Request $request)
+    public function SendEmailAction( Request $request)
     {
         $emailInformation = new Email();
         $form = $this->createForm(EmailFormType::class, $emailInformation);
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid())
-        {
+
+        return $this->render('email/index.html.twig', array(
+            'form' => $form->createView(),));
+    }
+
+    public function sendEmailAjaxAction( Request $request)
+    {
+
+        $emailInformation = new Email();
+        $form = $this->createForm(EmailFormType::class, $emailInformation);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
             $params = [];
             $params['user'] = $this->getParameter('mailer_user');
             $params['password'] = $this->getParameter('mailer_password');
@@ -41,22 +51,18 @@ class EmailSenderController extends Controller
                     'addTo' => $form->get('addressee')->getData()
                 ]
             );
-            $emailSender = new EmailSender($params, $mailer, $message);
-            $emailSender->SendEmail();
-            return $this->redirectToRoute('email_success');
+
+            $message->setSubject($params['subject'])
+                ->setFrom($params['user'])
+                ->setTo($params['addTo'])
+                ->setBody($params['body']);
+            $this->get('mailer')->send($message);
         }
-        return $this->render('email/index.html.twig', array(
-            'form' => $form->createView(),));
+
+
+        return new Response('Email Sent');
+
     }
 
-    public function EmailSentNoticeAction()
-    {
-        return new Response('<html><body>Email was sent</body></html>');
-    }
-
-    public function TestAjaxAction()
-    {
-        return new JsonResponse('test');
-    }
 
 }

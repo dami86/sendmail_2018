@@ -4,73 +4,70 @@ import Routing from '../../vendor/friendsofsymfony/jsrouting-bundle/Resources/pu
 
 Routing.setRoutingData(routes);
 
+var SendEmail = function() {
 
 
-console.log('Hello Webpack Encore');
+    this.AjaxForm = function ( url) {
 
-var testAjaxClass = document.getElementsByClassName("ajax");
+        if (document.forms[0] && window.FormData) {
 
-function callAjax(url, callback){
-    var xmlhttp;
-    // compatible with IE7+, Firefox, Chrome, Opera, Safari
-    xmlhttp = new XMLHttpRequest();
-    xmlhttp.onreadystatechange = function(){
-        if (xmlhttp.readyState == 4 && xmlhttp.status == 200){
-            callback(xmlhttp.responseText);
+            var message = new Object();
+            message.loading = 'Loading...';
+            message.success = 'Email Sent!';
+            message.failure = 'Whoops! There was a problem sending your message.';
+
+            var form = document.forms[0];
+
+            var statusMessage = document.createElement('div');
+            statusMessage.className = 'status';
+
+            // Set up the AJAX request
+            var request = new XMLHttpRequest();
+            request.open('POST', Routing.generate(url, true), true);
+            request.setRequestHeader('accept', 'application/json');
+
+            // Listen for the form being submitted
+            form.addEventListener('submit', function (evt) {
+                evt.preventDefault();
+                form.appendChild(statusMessage);
+
+                // Create a new FormData object passing in the form's key value pairs (that was easy!)
+                var formData = new FormData(form);
+
+                // Send the formData
+                request.send(formData);
+
+                // Watch for changes to request.readyState and update the statusMessage accordingly
+                request.onreadystatechange = function () {
+                    // <4 =  waiting on response from server
+                    if (request.readyState < 4)
+                        statusMessage.innerHTML = message.loading;
+                    // 4 = Response from server has been completely loaded.
+                    else if (request.readyState === 4) {
+                        // 200 - 299 = successful
+                        if (request.status == 200 && request.status < 300) {
+                            document.getElementById('alerts').innerHTML =_successMessage(message.success);
+                            statusMessage.innerHTML ='';
+                        }
+                        else
+                            form.insertAdjacentHTML('beforeend', message.failure);
+                    }
+                }
+            });
         }
-    }
-    xmlhttp.open("GET", url, true);
-    xmlhttp.send();
+
+    };
+
+
+    function _successMessage(message) {
+        return '<div class="alert alert-success fade show" role="alert"><b>Success! </b>' + message + '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a></div>';
+    };
+
 }
 
-var myFunction = function(e) {
-    console.log('test click');
-    callAjax( Routing.generate('email_test_ajax', true), myCallback );
-};
-
-var myCallback = function() {
-    console.log('after ajax');
-};
-
-for (var i = 0; i < testAjaxClass.length; i++) {
-    testAjaxClass[i].addEventListener('click', myFunction, false);
-}
-
-
-const $ = require('jquery');
-// JS is equivalent to the normal "bootstrap" package
-// no need to set this to a variable, just require it
-require('bootstrap');
-
-// or you can include specific pieces
-// require('bootstrap/js/dist/tooltip');
-// require('bootstrap/js/dist/popover');
-
-$(document).ready(function() {
-    $('[data-toggle="popover"]').popover();
-});
+var sendEmail = new SendEmail();
+sendEmail.AjaxForm('email_sender_send_email_ajax' );
 
 
 
 
-
-// $(document).on('click', 'button.ajax', function(){
-//     that = $(this);
-//     $.ajax({
-//         url: Routing.generate('test_ajax'),
-//         type: "POST",
-//         dataType: "json",
-//         data: {
-//             "some_var_name": "some_var_value"
-//         },
-//         async: true,
-//         success: function (data)
-//         {
-//             console.log(data)
-//             $('div#ajax-results').html(data.output);
-//
-//         }
-//     });
-//     return false;
-//
-// });
