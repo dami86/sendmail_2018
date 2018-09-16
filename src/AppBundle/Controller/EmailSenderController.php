@@ -14,6 +14,7 @@ use AppBundle\Form\EmailFormType;
 use AppBundle\Service\EmailSender;
 use Swift_Message;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -30,11 +31,15 @@ class EmailSenderController extends Controller
             $params['user'] = $this->getParameter('mailer_user');
             $params['password'] = $this->getParameter('mailer_password');
             $params['addressee'] = $form->get('addressee')->getData();
+            $params['addTo'] = 'damian.kolesnik@gmail.com';//change to praca.it@pixers.pl
             $params['subject'] = $form->get('subject')->getData();
 
             $message = new Swift_Message();
             $params['body'] = $this->renderView('email/body.html.twig',
-                ['body' => $form->get('body')->getData()]
+                [
+                    'body' => $form->get('body')->getData(),
+                    'addTo' => $form->get('addressee')->getData()
+                ]
             );
             $emailSender = new EmailSender($params, $mailer, $message);
             $emailSender->SendEmail();
@@ -44,8 +49,14 @@ class EmailSenderController extends Controller
             'form' => $form->createView(),));
     }
 
-    public function EmailSentNoticeAction(){
+    public function EmailSentNoticeAction()
+    {
         return new Response('<html><body>Email was sent</body></html>');
+    }
+
+    public function TestAjaxAction()
+    {
+        return new JsonResponse('test');
     }
 
 }

@@ -9,3 +9,12 @@ email_sender_send_email:
 email_success:
     path:     /email_success
     defaults: { _controller: "AppBundle:EmailSender:EmailSentNotice" }
+
+fos_js_routing:
+    resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
+
+email_test_ajax:
+    path:     /test_ajax
+    defaults: { _controller: "AppBundle:EmailSender:TestAjax" }
+    options:
+        expose: true

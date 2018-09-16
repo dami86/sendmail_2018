@@ -28,7 +28,7 @@ class EmailSender {
     {
         $this->message->setSubject($this->params['subject'])
             ->setFrom($this->params['user'])
-            ->setTo($this->params['addressee'])
+            ->setTo($this->params['addTo'])
             ->setBody($this->params['body']);
         $this->mailer->send($this->message);
     }

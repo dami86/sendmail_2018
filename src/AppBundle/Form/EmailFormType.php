@@ -24,7 +24,7 @@ class EmailFormType extends AbstractType {
     {
         $builder
             ->add('addressee', EmailType::class, array('label' => 'Addressee'))
-            ->add('subject', TextType::class, array('label' => 'Subject'))
+            ->add('subject', TextType::class, array('label' => 'Subject', 'required' => false))
             ->add('body', TextareaType::class, array('label' => 'Body'))
             ->add('Send Email', SubmitType::class);
     }
