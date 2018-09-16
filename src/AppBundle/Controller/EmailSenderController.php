@@ -13,7 +13,6 @@ use AppBundle\Entity\Email;
 use AppBundle\Form\EmailFormType;
 use Swift_Message;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -41,7 +40,7 @@ class EmailSenderController extends Controller
             $params['user'] = $this->getParameter('mailer_user');
             $params['password'] = $this->getParameter('mailer_password');
             $params['addressee'] = $form->get('addressee')->getData();
-            $params['addTo'] = 'damian.kolesnik@gmail.com';//change to praca.it@pixers.pl
+            $params['addTo'] = 'praca.it@pixers.pl';
             $params['subject'] = $form->get('subject')->getData();
 
             $message = new Swift_Message();
