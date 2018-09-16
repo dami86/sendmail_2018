@@ -40,17 +40,17 @@ var SendEmail = function() {
                 // Watch for changes to request.readyState and update the statusMessage accordingly
                 request.onreadystatechange = function () {
                     // <4 =  waiting on response from server
-                    if (request.readyState < 4)
-                        statusMessage.innerHTML = message.loading;
+                    if (request.readyState < 4) {
+                        document.getElementById('alerts').innerHTML =_successMessage(message.loading, 'notice');
+                    }
                     // 4 = Response from server has been completely loaded.
                     else if (request.readyState === 4) {
                         // 200 - 299 = successful
                         if (request.status == 200 && request.status < 300) {
-                            document.getElementById('alerts').innerHTML =_successMessage(message.success);
-                            statusMessage.innerHTML ='';
+                            document.getElementById('alerts').innerHTML =_successMessage(message.success, 'success');
                         }
                         else
-                            form.insertAdjacentHTML('beforeend', message.failure);
+                            form.insertAdjacentHTML('beforeend', document.getElementById('alerts').innerHTML =_successMessage(message.failure, 'danger'));
                     }
                 }
             });
@@ -59,8 +59,8 @@ var SendEmail = function() {
     };
 
 
-    function _successMessage(message) {
-        return '<div class="alert alert-success fade show" role="alert"><b>Success! </b>' + message + '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a></div>';
+    function _successMessage(message, type) {
+        return '<div class="alert alert-'+type+' fade show" role="alert"><b>Success! </b>' + message + '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a></div>';
     };
 
 }
